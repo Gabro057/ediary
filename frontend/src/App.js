@@ -1,43 +1,61 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import logo from './img/logo_w.png';
-import screenshot from "./img/screenshot.png";
 import './App.css';
+import Homepage from './components/Homepage.js'
+import AddActivity from './components/AddActivity.js'
+import Activities from './components/Activities.js'
+import { openDB } from 'idb'
 
-//const [state, setstate] = useState(initialState)
+const storeName = 'activities'
 
-const Homepage = ({ setScreen }) => {
-  const runActivity = () => {
-    setScreen("addActivity")
-  }
+/**
+ * TODO time: 3:28 
+ */
 
-  return (
-    <section className="Homepage">
-      <div className="container">
-        <div className="left">
-          <img src={screenshot} className="screenshot" alt="screenshot" />
-        </div>
-        <div className="right">
-          <p>
-            Log your daily activities in this fun to use app!
-          </p>
-          <button onClick={runActivity}>Start</button>
-        </div>
-      </div>
-    </section>
-  )
+//const activities = []
+const initDB = async () => {
+  const dbName = 'ediary.cz'  
+  const version = 1
+  const db = await openDB(dbName, version, {
+    upgrade(db, oldVersion, newVersion, transaction){
+      db.createObjectStore(storeName, { autoIncrement: true })
+    }
+  })
+  
+  return db
 }
 
-const AddActivity = () => {
-  return (
-    <section className="AddActivity">
-      <p>Add activity</p>
-    </section>
-  )
+const initActivities = async () => {
+  console.info("initActivities")
+  const db = await initDB()
+  const tx = await db.transaction(storeName, 'readonly')
+  const activities = tx.objectStore('activities').getAll()
+  await tx.done
+  console.info(">initActivities activities", activities)
+  return activities
+}
+
+const storeActivity = async (activity) => {
+  console.log('storeActivity', activity);
+  const db = await initDB()
+  const tx = await db.transaction(storeName, 'readwrite')
+  const store = await tx.objectStore(storeName)
+
+  await store.put(activity)
+  await tx.done
 }
 
 const App = () => {
-  const [screen, setScreen] = useState('homepage')
+  const [screen, setScreen] = useState('activities')
+  const [activities, setActivities] = useState([])
+  //const activities = initActivities()
+  useEffect(() => {
+    (async () => {
+      let act = await initActivities()
+      console.info("activities", act)
+      setActivities(act)      
+    })()    
+  }, [])
 
   return (    
     <div className="App">
@@ -49,7 +67,8 @@ const App = () => {
       </header>
       
       {screen === 'homepage' && <Homepage setScreen={setScreen} />}
-      {screen === 'addActivity' && <AddActivity />}
+      {screen === 'addActivity' && <AddActivity storeActivity={storeActivity} />}
+      {screen === 'activities' && <Activities activities={activities} />}
       
       <footer>
         <p>© 2021 HrbekJ</p>
