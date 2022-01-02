@@ -67,8 +67,8 @@ const App = () => {
       </header>
       
       {screen === 'homepage' && <Homepage setScreen={setScreen} />}
-      {screen === 'addActivity' && <AddActivity storeActivity={storeActivity} />}
-      {screen === 'activities' && <Activities activities={activities} />}
+      {screen === 'addActivity' && <AddActivity setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities}  />}
+      {screen === 'activities' && <Activities setScreen={setScreen} activities={activities} />}
       
       <footer>
         <p>© 2021 HrbekJ</p>

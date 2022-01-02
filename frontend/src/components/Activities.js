@@ -4,16 +4,22 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 // Components
 import Detail from './Activities/Detail.js'
-import DesktopMenu from './Activities/SidebarDesktop.js'
+import ActivitiesList from './Activities/ActivitiesList.js'
 import MobileMenu from './Activities/SidebarMobile.js'
 
-const Activities = ({ activities }) => {	
+const Activities = ({ activities, setScreen }) => {	
 	const [showActivities, setShowActivities] = useState(true)
 	const [currentActivity, setCurrentActivity] = useState({})
 
 	return (		
 		<Section className="activities" showActivities={showActivities}>
-			<DesktopMenu activities={activities} showActivities={showActivities} setCurrentActivity={setCurrentActivity} />
+			<ActivitiesList 
+				activities={activities} 
+				showActivities={showActivities} 
+				setShowActivities={setShowActivities} 
+				setCurrentActivity={setCurrentActivity} 
+				setScreen={setScreen}
+			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
 			<Detail currentActivity={currentActivity} />
 		</Section>

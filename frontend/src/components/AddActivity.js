@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
-const AddActivity = ({ storeActivity }) => {
+const AddActivity = ({ storeActivity, initActivities, setScreen, setActivities }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
-  const saveActivity = () => {    
-    storeActivity({ title, description })
+  const addActivity = async () => {    
+    await storeActivity({ title, description })
+    let act = await initActivities()    
+    setActivities(act)
+    setScreen('activities')
   }
 
   return (
@@ -14,7 +17,7 @@ const AddActivity = ({ storeActivity }) => {
       <input type="text" onChange={e => setTitle(e.target.value)} />
       <h2>Activity description</h2>
       <textarea name="" id="" cols="30" rows="5" onChange={e => setDescription(e.target.value)}></textarea>
-      <button onClick={saveActivity}>Uložit</button>
+      <button onClick={addActivity}>Uložit</button>
     </section>
   )
 }
