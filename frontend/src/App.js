@@ -9,7 +9,7 @@ import { openDB } from 'idb'
 const storeName = 'activities'
 
 /**
- * TODO time: 3:28 
+ * TODO time: 4:40 
  */
 
 //const activities = []
@@ -46,7 +46,7 @@ const storeActivity = async (activity) => {
 }
 
 const App = () => {
-  const [screen, setScreen] = useState('activities')
+  const [screen, setScreen] = useState('addActivity')
   const [activities, setActivities] = useState([])
   //const activities = initActivities()
   useEffect(() => {
