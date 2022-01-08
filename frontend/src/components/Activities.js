@@ -3,13 +3,13 @@ import { css } from '@emotion/react'
 //import { css, jsx } from '@emotion/react'
 import styled from '@emotion/styled'
 // Components
-import Detail from './Activities/Detail.js'
+import ActivityDetail from './ActivityDetail/ActivityDetail.js'
 import ActivitiesList from './Activities/ActivitiesList.js'
 import MobileMenu from './Activities/SidebarMobile.js'
 
 const Activities = ({ activities, setScreen }) => {	
-	const [showActivities, setShowActivities] = useState(true)
-	const [currentActivity, setCurrentActivity] = useState({})
+	const [showActivities, setShowActivities] = useState(false)
+	const [currentActivity, setCurrentActivity] = useState(null)
 
 	return (		
 		<Section className="activities" showActivities={showActivities}>
@@ -21,7 +21,7 @@ const Activities = ({ activities, setScreen }) => {
 				setScreen={setScreen}
 			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
-			<Detail currentActivity={currentActivity} />
+			<ActivityDetail currentActivity={currentActivity} />
 		</Section>
 	)
 }
