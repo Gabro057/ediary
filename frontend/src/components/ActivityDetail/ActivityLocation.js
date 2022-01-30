@@ -55,12 +55,15 @@ const ActivityLocation = ({ location }) => {
 		}
   }, [location])
 
-  return (
-		<>
-			<h2>MAP</h2>
-			<Map id="mapid" className="MapPicker"></Map>
-		</>
-  )
+	if(location == null) return (<></>)
+	else {
+		return (
+			<>
+				<h2>MAP</h2>
+				<Map id="mapid" className="MapPicker"></Map>
+			</>
+		)
+	}
 }
 
 const Map = styled.div`	

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import MapPicker from './AddActivity/MapPicker'
+import DatePicker from './AddActivity/DatePicker'
 
 const AddActivity = ({ storeActivity, initActivities, setScreen, setActivities }) => {
   const [title, setTitle] = useState('')
@@ -17,6 +18,7 @@ const AddActivity = ({ storeActivity, initActivities, setScreen, setActivities }
     <section className="AddActivity">
       <h2>Activity title</h2>
       <input type="text" onChange={e => setTitle(e.target.value)} />
+      <DatePicker />
       <MapPicker location={location} setLocation={setLocation} />
       <h2>Activity description</h2>
       <textarea name="" id="" cols="30" rows="5" onChange={e => setDescription(e.target.value)}></textarea>
