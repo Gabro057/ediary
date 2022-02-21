@@ -19,7 +19,8 @@ const initMap = location => {
 		boxZoom: false,
 		doubleClickZoom: false,
 		dragging: false,
-		zoomControl: false
+		zoomControl: false,
+		scrollWheelZoom: false
 	}).setView([location.lat || 51.505, location.lng || -0.09], 13);
 
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -57,19 +58,18 @@ const ActivityLocation = ({ location }) => {
 
 	if(location == null) return (<></>)
 	else {
-		return (
-			<>
-				<h2>MAP</h2>
-				<Map id="mapid" className="MapPicker"></Map>
-			</>
+		return (				
+			<Map id="mapid" className="MapPicker"></Map>
 		)
 	}
 }
 
 const Map = styled.div`	
-	margin: 0 auto;
-	width: 20vw;
-	height: 20vh;	
+	margin-left: 50px;
+	max-width: 55vw;
+	width: 850px;
+	max-height: 30vh;	
+	height: 400px;
 `
 
 export default ActivityLocation

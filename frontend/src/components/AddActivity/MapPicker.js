@@ -42,16 +42,15 @@ const MapPicker = ({ location, setLocation }) => {
   }, [location, setLocation])
 
   return (
-		<>
-			<h2>MAP</h2>
-			<Map id="mapid" className="MapPicker"></Map>
-		</>
+		<Map id="mapid" className="MapPicker"></Map>		
   )
 }
 
 const Map = styled.div`	
-	width: 50vw;
-	height: 30vh;	
+	//max-width: 50vw;
+	width: 100%;
+	//max-height: 30vh;	
+	height: 10rem;		
 `
 
 export default MapPicker

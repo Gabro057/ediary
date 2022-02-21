@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import logo from './img/logo_w.png';
 import './App.css';
 import Homepage from './components/Homepage.js'
-import AddActivity from './components/AddActivity.js'
+import AddActivity from './components/AddActivity/AddActivity.js'
 import Activities from './components/Activities.js'
 import { openDB } from 'idb'
+import { arrayIncludes } from '@material-ui/pickers/_helpers/utils';
 
 const storeName = 'activities'
 
@@ -27,8 +28,19 @@ const initActivities = async () => {
   const tx = await db.transaction(storeName, 'readonly')
   const activities = tx.objectStore('activities').getAll()
   await tx.done
+
   console.info(">initActivities activities", activities)
   return activities
+}
+
+const getActivities = async () => {
+  let activities = await initActivities()
+  //sort the activities
+  return activities.sort((a, b) => {
+    return new Date(b.datetime) - new Date(a.datetime)
+  })
+
+  //return activities
 }
 
 const storeActivity = async (activity) => {
@@ -42,13 +54,13 @@ const storeActivity = async (activity) => {
 }
 
 const App = () => {
-  const [screen, setScreen] = useState('addActivity')
+  const [screen, setScreen] = useState('addActivity') //addActivity
   const [activities, setActivities] = useState([])
   //const activities = initActivities()
   useEffect(() => {
     (async () => {
-      let act = await initActivities()
-      //console.info("activities", act)
+      //let act = await initActivities()
+      const act = await getActivities()      
       setActivities(act)      
     })()    
   }, [])

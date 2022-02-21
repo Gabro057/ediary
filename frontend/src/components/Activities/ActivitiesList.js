@@ -2,17 +2,37 @@ import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
 const ActivitiesList = ({ setScreen, activities, showActivities, setShowActivities, setCurrentActivity }) => {
+	const monthNames = [
+		'JAN', 'FEB', 'MAR',
+		'APR', 'MAY', 'JUN',
+		'JUL', 'AUG', 'SEP',
+		'OCT', 'NOV', 'DEC'
+	]
+
 	return (
 		<Menu>
 			<List className="list" showActivities={showActivities}>
 				{ activities.map((activity, index) => {
-					return (<Item key={index} onClick={
-						() => {
-							setCurrentActivity(activity)
-							setShowActivities(false)
-						}
-					}>{activity.title}</Item>)
-				})}				
+						return (
+							<Item key={index} onClick={() => {
+									setCurrentActivity(activity)
+									setShowActivities(false)
+							}}>								
+								<div>
+									<Day>
+										{ activity.datetime && activity.datetime.getDate() }	
+									</Day>
+									<Month>
+										{ activity.datetime && monthNames[activity.datetime.getMonth()] }
+									</Month>								
+								</div>
+								<Title>
+									{activity.title}
+								</Title>
+							</Item>
+						)
+					}
+				)}				
 			</List>		
 			<AddBtnWrp>
 				<button onClick={() => { setScreen('addActivity') }}>ADD</button>				
@@ -33,6 +53,7 @@ const Menu = styled.div`
 	border-right: 1px solid #000000;
 	height: calc(100vh - 170px);	
 	text-align: left;
+	overflow: auto;
 
 	@media (max-width: 800px) {
 		${displayList}
@@ -44,6 +65,8 @@ const List = styled.ul`
 `
 
 const Item = styled.li`
+	display: grid;
+	grid-template-columns: 50px auto;
 	padding: var(--offset, 20px);
 	border-bottom: 1px solid black;
 
@@ -61,6 +84,18 @@ const AddBtnWrp = styled.div`
 	button {
 		font-size: 2rem;
 	}
+`
+
+const Title = styled.div`	
+	font-size: 1.5rem;
+`
+
+const Day = styled.div`	
+	font-size: 2rem;
+`
+
+const Month = styled.div`	
+	font-size: 1rem;
 `
 
 export default ActivitiesList

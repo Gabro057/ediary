@@ -17,21 +17,22 @@ button {
 
 .App {
   background-color: #f0f0f0;
-  text-align: center;
+  //text-align: center;
   font-size: calc(10px + 2vmin);
   color: #111111;
 }
-
+/*
 section {
   display: flex;
-  min-height: calc(100vh - 50px);
+  //min-height: calc(100vh - 50px);
   margin: 0 auto;
-  padding: 120px + var(--offset, 20px) var(--offset, 20px) var(--offset, 20px)
+  padding: 0 + var(--offset, 20px) var(--offset, 20px) var(--offset, 20px)
+    //120px
     var(--offset, 20px);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+}*/
 
 header {
   position: sticky;
@@ -114,7 +115,7 @@ button:hover {
   cursor: pointer;
   background-color: #419734;
 }
-
+/*
 .AddActivity {
   display: flex;
   flex-direction: column;
@@ -122,3 +123,4 @@ button:hover {
   width: max(50vw, 300px);
   min-width: 250px;
 }
+*/

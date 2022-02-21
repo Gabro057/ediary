@@ -35,9 +35,10 @@ const Section = styled.section`
 	display: grid;	
 	grid-template-columns: 300px 1fr;
 	grid-template-areas: "sidebar-desktop main";
-	padding-top: 120px;
+	//padding-top: 120px;
 	width: 100%;
-	height: calc(100vh - 170px);
+	height: 100%;
+	//height: calc(100vh - 170px);
 
 	@media (max-width: 800px) {
 		grid-template-columns: 80px 1fr;
