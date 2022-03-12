@@ -20,7 +20,7 @@ const ActivityDate = ({ datetime }) => {
 	]
 
 	return (
-		<div>
+		<DateWrapper>
 			<Day>
 				{ datetime.getDate() }	
 			</Day>
@@ -30,9 +30,13 @@ const ActivityDate = ({ datetime }) => {
 			<Time>
 				{ timeFormat(datetime) }	
 			</Time>
-		</div>		
+		</DateWrapper>		
 	)	
 	}
+
+	const DateWrapper = styled.div`
+		text-align: right;
+	`
 
 	const Day = styled.div`	
 		font-size: 4rem;

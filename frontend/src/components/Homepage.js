@@ -3,7 +3,7 @@ import screenshot from "../img/screenshot.png";
 
 const Homepage = ({ setScreen }) => {
   const runActivity = () => {
-    setScreen("addActivity")
+    setScreen("addActivityFromHomepage")
   }
   
   return (

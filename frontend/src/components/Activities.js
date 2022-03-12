@@ -7,7 +7,7 @@ import ActivityDetail from './ActivityDetail/ActivityDetail.js'
 import ActivitiesList from './Activities/ActivitiesList.js'
 import MobileMenu from './Activities/SidebarMobile.js'
 
-const Activities = ({ activities, setScreen }) => {	
+const Activities = ({ activities, setScreen, deleteActivity, reloadActivities }) => {	
 	const [showActivities, setShowActivities] = useState(false)
 	const [currentActivity, setCurrentActivity] = useState(null)
 
@@ -21,7 +21,13 @@ const Activities = ({ activities, setScreen }) => {
 				setScreen={setScreen}
 			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
-			<ActivityDetail currentActivity={currentActivity} />
+			<ActivityDetail 
+				setCurrentActivity={setCurrentActivity}
+				currentActivity={currentActivity} 
+				deleteActivity={deleteActivity} 
+				setScreen={setScreen} 
+				reloadActivities={reloadActivities} 
+			/>
 		</Section>
 	)
 }

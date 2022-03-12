@@ -33,14 +33,33 @@ const initActivities = async () => {
   return activities
 }
 
+const initKeys = async () => {
+  console.info("initKeys")
+  const db = await initDB()
+  const tx = await db.transaction(storeName, 'readonly')
+  const keys = tx.objectStore('activities').getAllKeys()
+  await tx.done
+
+  console.info(">initKeys keys", keys)
+  return keys
+}
+
 const getActivities = async () => {
   let activities = await initActivities()
+  let keys = await initKeys()
+  
+  activities.forEach((activity, index) => {
+    activity.key = keys[index]
+  })
+  
   //sort the activities
-  return activities.sort((a, b) => {
+  activities.sort((a, b) => {
     return new Date(b.datetime) - new Date(a.datetime)
   })
 
-  //return activities
+  console.info("activities", activities)
+
+  return activities
 }
 
 const storeActivity = async (activity) => {
@@ -53,15 +72,27 @@ const storeActivity = async (activity) => {
   await tx.done
 }
 
+const deleteActivity = async (key) => {  
+  const db = await initDB()
+  const tx = await db.transaction(storeName, 'readwrite')
+  const store = await tx.objectStore(storeName)
+  await store.delete(key)
+  await tx.done
+}
+
 const App = () => {
-  const [screen, setScreen] = useState('addActivity') //addActivity
+  const [screen, setScreen] = useState('activities') //addActivity
   const [activities, setActivities] = useState([])
-  //const activities = initActivities()
+  
+  const reloadActivities = async () => {
+    const act = await getActivities()  
+    console.info("act", act)    
+    setActivities(act)
+  }
+  
   useEffect(() => {
     (async () => {
-      //let act = await initActivities()
-      const act = await getActivities()      
-      setActivities(act)      
+      reloadActivities()     
     })()    
   }, [])
 
@@ -75,8 +106,9 @@ const App = () => {
       </header>
       
       {screen === 'homepage' && <Homepage setScreen={setScreen} />}
-      {screen === 'addActivity' && <AddActivity setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities}  />}
-      {screen === 'activities' && <Activities setScreen={setScreen} activities={activities} />}
+      {screen === 'addActivityFromHomepage' && <AddActivity comingFromHomepage setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities} reloadActivities={reloadActivities}  />}
+      {screen === 'addActivity' && <AddActivity setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities}  reloadActivities={reloadActivities} />}
+      {screen === 'activities' && <Activities setScreen={setScreen} activities={activities} reloadActivities={reloadActivities} deleteActivity={deleteActivity} />}
       
       <footer>
         <p>© 2021 HrbekJ</p>
