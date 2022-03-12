@@ -83,6 +83,9 @@ const Section = styled.section`
   max-width: 1000px;
   margin: 0 auto;
   //gap: 1rem;
+  @media (max-width: 800px){    
+    grid-template-rows: auto minmax(450px, 45vh) minmax(350px, 40vh);
+  }
 `
 
 const TopBlock = styled.section`
@@ -90,6 +93,9 @@ const TopBlock = styled.section`
   grid-template-columns: 50% 50%;
   padding-top: 2rem;
   //gap: 1rem;
+  @media (max-width: 800px){    
+    grid-template-columns: 100%;    
+  }
 `
 
 const InputBlock = styled.section`

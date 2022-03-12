@@ -10,7 +10,7 @@ const ActivitiesList = ({ setScreen, activities, showActivities, setShowActiviti
 	]
 
 	return (
-		<Menu>
+		<Menu showActivities={showActivities}>
 			<List className="list" showActivities={showActivities}>
 				{ activities.map((activity, index) => {
 						return (
@@ -41,13 +41,13 @@ const ActivitiesList = ({ setScreen, activities, showActivities, setShowActiviti
 	)
 }
 
-const displayList = props =>
+const disp = props =>
 css`		
-	display: ${props.showActivities ? 'block' : 'none'};
+	display: ${props.showActivities ? "grid" : "none"};
 `
 
 const Menu = styled.div`	
-	display: grid;
+	//display: grid;
 	grid-template-rows: auto 100px;
 	grid-area: sidebar-desktop;
 	border-right: 1px solid #000000;
@@ -56,7 +56,7 @@ const Menu = styled.div`
 	overflow: auto;
 
 	@media (max-width: 800px) {
-		${displayList}
+		${disp}
 	}
 `
 

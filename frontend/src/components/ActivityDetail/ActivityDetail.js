@@ -3,10 +3,10 @@ import ActivityDate from './ActivityDate'
 import EmptyStateScreen from './EmptyStateScreen'
 
 import xss from 'xss'
-
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-const ActivityDetail = ({ currentActivity, setCurrentActivity, reloadActivities, setScreen, deleteActivity }) => {	
+const ActivityDetail = ({ showActivities, currentActivity, setCurrentActivity, reloadActivities, setScreen, deleteActivity }) => {	
 	console.log("ActivityDetail currentActivity", currentActivity)
 
 	if(!currentActivity) {
@@ -25,7 +25,7 @@ const ActivityDetail = ({ currentActivity, setCurrentActivity, reloadActivities,
 	}
 
 	return (
-		<DetailWrp className="detail">			
+		<DetailWrp className="detail" showActivities={showActivities}>			
 			<Top>				
 				<h1>{currentActivity.title}</h1>
 				<ActivityDate datetime={currentActivity.datetime} />
@@ -50,11 +50,19 @@ const BtnWrapper = styled.div`
 		background-color: #e64200;
 	}
 `
+const changeActivityDetail = props =>
+css`	
+	display: ${props.showActivities ? "none" : "block"};	
+`
 
 const DetailWrp = styled.div`	
 	grid-area: main;
 	height: 100%;	
 	padding-top: var(--offset, 20px);
+
+	@media (max-width: 800px) {
+		${changeActivityDetail}		
+	}
 `
 
 const Top = styled.div`	

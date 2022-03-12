@@ -16,12 +16,13 @@ const Activities = ({ activities, setScreen, deleteActivity, reloadActivities })
 			<ActivitiesList 
 				activities={activities} 
 				showActivities={showActivities} 
-				setShowActivities={setShowActivities} 
+				setShowActivities={setShowActivities}
 				setCurrentActivity={setCurrentActivity} 
 				setScreen={setScreen}
 			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
 			<ActivityDetail 
+				showActivities={showActivities} 
 				setCurrentActivity={setCurrentActivity}
 				currentActivity={currentActivity} 
 				deleteActivity={deleteActivity} 
@@ -35,6 +36,7 @@ const Activities = ({ activities, setScreen, deleteActivity, reloadActivities })
 const changeGridArea = props =>
 css`	
 	grid-template-areas: "sidebar-mobile ${props.showActivities ? 'sidebar-desktop' : 'main'}";
+	//grid-template-areas: "sidebar-mobile sidebar-desktop";
 `
 
 const Section = styled.section`

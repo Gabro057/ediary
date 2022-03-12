@@ -12,6 +12,10 @@ const Wrapper = styled.div`
 	display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 800px){    
+    display: none;
+  }
 `
 
 
