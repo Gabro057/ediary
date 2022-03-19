@@ -10,6 +10,10 @@
   box-sizing: border-box;
 }
 
+body {
+  user-select: none;
+}
+
 body,
 button {
   font-family: "Fresca", sans-serif;

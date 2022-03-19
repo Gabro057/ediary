@@ -1,7 +1,8 @@
 import { css } from '@emotion/react'
+import { navigate } from '@reach/router'
 import styled from '@emotion/styled'
 
-const ActivitiesList = ({ setScreen, activities, showActivities, setShowActivities, setCurrentActivity }) => {
+const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurrentActivity }) => {
 	const monthNames = [
 		'JAN', 'FEB', 'MAR',
 		'APR', 'MAY', 'JUN',
@@ -15,6 +16,7 @@ const ActivitiesList = ({ setScreen, activities, showActivities, setShowActiviti
 				{ activities.map((activity, index) => {
 						return (
 							<Item key={index} onClick={() => {
+									navigate('/activities/' + activity.key)
 									setCurrentActivity(activity)
 									setShowActivities(false)
 							}}>								
@@ -35,7 +37,7 @@ const ActivitiesList = ({ setScreen, activities, showActivities, setShowActiviti
 				)}				
 			</List>		
 			<AddBtnWrp>
-				<button onClick={() => { setScreen('addActivity') }}>ADD</button>				
+				<button onClick={() => { navigate('/add-activity') }}>ADD</button>				
 			</AddBtnWrp>
 		</Menu>
 	)

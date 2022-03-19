@@ -1,18 +1,16 @@
+import { navigate } from '@reach/router'
+
 import ActivityLocation from './ActivityLocation'
 import ActivityDate from './ActivityDate'
-import EmptyStateScreen from './EmptyStateScreen'
 
 import xss from 'xss'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-const ActivityDetail = ({ showActivities, currentActivity, setCurrentActivity, reloadActivities, setScreen, deleteActivity }) => {	
-	console.log("ActivityDetail currentActivity", currentActivity)
-
-	if(!currentActivity) {
-		return (
-			<EmptyStateScreen></EmptyStateScreen>
-		)
+const ActivityDetail = ({ activities, showActivities, currentActivity, setCurrentActivity, reloadActivities, deleteActivity, activityId }) => {		
+	if(!currentActivity) {		
+		if(activityId) setCurrentActivity(activities.filter(item => item.key === Number(activityId) ? true : false)[0])		
+		return '<></>'
 	}
 
 	const deleteCurrent = () => {
@@ -20,7 +18,7 @@ const ActivityDetail = ({ showActivities, currentActivity, setCurrentActivity, r
 		if (!window.confirm("Do you really want to delete this activity?")) return
 		deleteActivity(currentActivity.key)
 		reloadActivities()
-		setScreen('activities')
+		navigate('/activities')
 		setCurrentActivity(null)
 	}
 
@@ -82,6 +80,7 @@ const Top = styled.div`
 
 const Description = styled.p`	
 	margin: 30px 0 0 50px;
+	user-select: text;
 `
 
 export default ActivityDetail

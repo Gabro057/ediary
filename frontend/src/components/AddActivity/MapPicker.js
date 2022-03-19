@@ -20,10 +20,24 @@ const initMap = (location, setLocation) => {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 		}).addTo(mapInstance);
 		
-		L.marker([location.lat || lat, location.lng || lng]).addTo(mapInstance)
+		const myIcon = L.icon({
+			iconUrl: '/img/marker-icon-2x.png',
+			iconSize: [38, 65],
+			iconAnchor: [22, 64]
+			//popupAnchor: [-3, -76]
+			//shadowUrl: 'my-icon-shadow.png',
+			//shadowSize: [68,95],
+			//shadowAnchor: [22, 94]
+		})
+
+		L.marker([location.lat || lat, location.lng || lng], { icon: myIcon }).addTo(mapInstance)
+			
+			/*
+				L.marker([location.lat || lat, location.lng || lng], { icon: myIcon }).addTo(mapInstance)
 			.addTo(mapInstance)
 			.bindPopup('Lokace aktivity')
 			.openPopup();
+			*/
 
 			mapInstance.on('click', e => {
 				//console.log(e.latlng)
@@ -42,14 +56,12 @@ const initMap = (location, setLocation) => {
 }
 
 const MapPicker = ({ location, setLocation }) => {
-	useEffect(() => {
-    console.info("componentDidMount")
+	useEffect(() => {    
 		initMap(location, setLocation)
 
-		return () => {
-			console.log('componentUnmount')
+		return () => {			
 			mapInstance.off()
-			mapInstance.remove()
+			if(mapInstance) mapInstance.remove()
 		}
   }, [location, setLocation])
 

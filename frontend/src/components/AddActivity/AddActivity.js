@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { navigate } from '@reach/router'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
@@ -8,7 +9,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import xss from 'xss'
 
-const AddActivity = ({ comingFromHomepage, storeActivity, setScreen, reloadActivities }) => {
+const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) => {
   const [title, setTitle] = useState('')
   const [location, setLocation] = useState({})
   const [datetime, setDatetime] = useState(new Date())
@@ -27,7 +28,7 @@ const AddActivity = ({ comingFromHomepage, storeActivity, setScreen, reloadActiv
 
     await storeActivity({ title: sanitizedTitle, location, description: sanitizedDescription, datetime })    
     reloadActivities()
-    setScreen('activities')
+    navigate('/activities')
   }
 
   const changeDescription = value => { 
@@ -40,7 +41,7 @@ const AddActivity = ({ comingFromHomepage, storeActivity, setScreen, reloadActiv
     <Section className="AddActivity">
       <BtnWrapper>
         {comingFromHomepage ? '' :
-          <button className="secondary" onClick={() => setScreen('activities')}>Back</button>
+          <button className="secondary" onClick={() => navigate('/activities')}>Back</button>
         }
         <button onClick={addActivity}>Save activity</button>
       </BtnWrapper>
@@ -82,6 +83,7 @@ const Section = styled.section`
   flex-direction: row;
   max-width: 1000px;
   margin: 0 auto;
+  padding: 10px 50px;
   //gap: 1rem;
   @media (max-width: 800px){    
     grid-template-rows: auto minmax(450px, 45vh) minmax(350px, 40vh);

@@ -1,9 +1,9 @@
-
+import { navigate } from '@reach/router'
 import screenshot from "../img/screenshot.png";
 
-const Homepage = ({ setScreen }) => {
+const Homepage = () => {
   const runActivity = () => {
-    setScreen("addActivityFromHomepage")
+    navigate("/add-first-activity")
   }
   
   return (

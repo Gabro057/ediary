@@ -5,7 +5,8 @@ import Homepage from './components/Homepage.js'
 import AddActivity from './components/AddActivity/AddActivity.js'
 import Activities from './components/Activities.js'
 import { openDB } from 'idb'
-import { arrayIncludes } from '@material-ui/pickers/_helpers/utils';
+//import { arrayIncludes } from '@material-ui/pickers/_helpers/utils';
+import { Router, Link } from "@reach/router"
 
 const storeName = 'activities'
 
@@ -81,7 +82,6 @@ const deleteActivity = async (key) => {
 }
 
 const App = () => {
-  const [screen, setScreen] = useState('activities') //addActivity
   const [activities, setActivities] = useState([])
   
   const reloadActivities = async () => {
@@ -105,11 +105,13 @@ const App = () => {
         </div>
       </header>
       
-      {screen === 'homepage' && <Homepage setScreen={setScreen} />}
-      {screen === 'addActivityFromHomepage' && <AddActivity comingFromHomepage setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities} reloadActivities={reloadActivities}  />}
-      {screen === 'addActivity' && <AddActivity setScreen={setScreen} storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities}  reloadActivities={reloadActivities} />}
-      {screen === 'activities' && <Activities setScreen={setScreen} activities={activities} reloadActivities={reloadActivities} deleteActivity={deleteActivity} />}
-      
+      <Router>
+        <Homepage path="/" />
+        <AddActivity path="add-first-activity" comingFromHomepage storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities} reloadActivities={reloadActivities}  />
+        <AddActivity path="add-activity" storeActivity={storeActivity} initActivities={initActivities} setActivities={setActivities} activities={activities}  reloadActivities={reloadActivities} />
+        <Activities path="activities/*" activities={activities} reloadActivities={reloadActivities} deleteActivity={deleteActivity} />
+      </Router>
+
       <footer>
         <p>© 2021 HrbekJ</p>
       </footer>

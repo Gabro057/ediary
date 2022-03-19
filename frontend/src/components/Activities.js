@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { css } from '@emotion/react'
 //import { css, jsx } from '@emotion/react'
+import { Router } from "@reach/router"
 import styled from '@emotion/styled'
 // Components
 import ActivityDetail from './ActivityDetail/ActivityDetail.js'
+import EmptyStateScreen from './ActivityDetail/EmptyStateScreen'
 import ActivitiesList from './Activities/ActivitiesList.js'
 import MobileMenu from './Activities/SidebarMobile.js'
 
-const Activities = ({ activities, setScreen, deleteActivity, reloadActivities }) => {	
+const Activities = ({ activities, deleteActivity, reloadActivities }) => {	
 	const [showActivities, setShowActivities] = useState(false)
 	const [currentActivity, setCurrentActivity] = useState(null)
 
@@ -17,18 +19,23 @@ const Activities = ({ activities, setScreen, deleteActivity, reloadActivities })
 				activities={activities} 
 				showActivities={showActivities} 
 				setShowActivities={setShowActivities}
-				setCurrentActivity={setCurrentActivity} 
-				setScreen={setScreen}
+				setCurrentActivity={setCurrentActivity}
 			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
-			<ActivityDetail 
-				showActivities={showActivities} 
-				setCurrentActivity={setCurrentActivity}
-				currentActivity={currentActivity} 
-				deleteActivity={deleteActivity} 
-				setScreen={setScreen} 
-				reloadActivities={reloadActivities} 
-			/>
+			
+			<Router>
+				<ActivityDetail 
+					activities={activities}
+					showActivities={showActivities} 
+					setCurrentActivity={setCurrentActivity}
+					currentActivity={currentActivity} 
+					deleteActivity={deleteActivity}
+					reloadActivities={reloadActivities} 
+					path="/:activityId"
+				/>
+
+			<EmptyStateScreen path="/" />
+			</Router>
 		</Section>
 	)
 }
