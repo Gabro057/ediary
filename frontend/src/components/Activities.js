@@ -9,7 +9,7 @@ import EmptyStateScreen from './ActivityDetail/EmptyStateScreen'
 import ActivitiesList from './Activities/ActivitiesList.js'
 import MobileMenu from './Activities/SidebarMobile.js'
 
-const Activities = ({ activities, deleteActivity, reloadActivities }) => {	
+const Activities = ({ activities, deleteActivity, reloadActivities, loggedIn }) => {	
 	const [showActivities, setShowActivities] = useState(false)
 	const [currentActivity, setCurrentActivity] = useState(null)
 
@@ -20,6 +20,7 @@ const Activities = ({ activities, deleteActivity, reloadActivities }) => {
 				showActivities={showActivities} 
 				setShowActivities={setShowActivities}
 				setCurrentActivity={setCurrentActivity}
+				loggedIn={loggedIn}
 			/>
 			<MobileMenu showActivities={showActivities} setShowActivities={setShowActivities} />				
 			

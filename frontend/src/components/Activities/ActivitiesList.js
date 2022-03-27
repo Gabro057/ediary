@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 import { navigate } from '@reach/router'
 import styled from '@emotion/styled'
 
-const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurrentActivity }) => {
+const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurrentActivity, loggedIn }) => {
 	const monthNames = [
 		'JAN', 'FEB', 'MAR',
 		'APR', 'MAY', 'JUN',
@@ -37,7 +37,13 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 				)}				
 			</List>		
 			<AddBtnWrp>
-				<button onClick={() => { navigate('/add-activity') }}>ADD</button>				
+				<button onClick={() => { 
+					if(!loggedIn) {
+						navigate('/login')
+						return 	
+					}
+					navigate('/add-activity') 
+				}}>ADD</button>				
 			</AddBtnWrp>
 		</Menu>
 	)
