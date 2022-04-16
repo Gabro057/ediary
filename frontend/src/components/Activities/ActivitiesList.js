@@ -1,5 +1,8 @@
 import { css } from '@emotion/react'
 import { navigate } from '@reach/router'
+import { gql } from 'apollo-boost'
+import { Query } from 'react-apollo'
+
 import styled from '@emotion/styled'
 
 const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurrentActivity, loggedIn }) => {
@@ -10,9 +13,44 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 		'OCT', 'NOV', 'DEC'
 	]
 
+	/*query={gql`{todos { id name }}`}*/
 	return (
 		<Menu showActivities={showActivities}>
-			<List className="list" showActivities={showActivities}>
+			<Query query={
+				gql`{ 
+					activities { 
+						title 
+						description
+						datetime
+					}}`
+				}> 
+				{({ loading, error, data }) => {
+					if(loading) return <p>Loading ...</p>
+					if(error) {
+						console.error("error", error)
+						//navigate('/')
+						return <p></p>
+					}
+					if(!data || !data.activities) return ''
+					return <ul>{data.activities.map(item => <li key={item.title}>{item.title}</li>)}</ul>
+				}}
+			</Query>
+				
+			<AddBtnWrp>
+				<button onClick={() => { 
+					if(!loggedIn) {
+						navigate('/register')
+						return 	
+					}
+					navigate('/add-activity') 
+				}}>ADD</button>				
+			</AddBtnWrp>
+		</Menu>
+	)
+}
+
+/*
+<List className="list" showActivities={showActivities}>
 				{ activities.map((activity, index) => {
 						return (
 							<Item key={index} onClick={() => {
@@ -35,19 +73,8 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 						)
 					}
 				)}				
-			</List>		
-			<AddBtnWrp>
-				<button onClick={() => { 
-					if(!loggedIn) {
-						navigate('/login')
-						return 	
-					}
-					navigate('/add-activity') 
-				}}>ADD</button>				
-			</AddBtnWrp>
-		</Menu>
-	)
-}
+			</List>	
+*/
 
 const disp = props =>
 css`		

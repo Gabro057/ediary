@@ -1,14 +1,13 @@
 import { useState } from 'react';
-//import xss from 'xss'
+import xss from 'xss'
 import { navigate } from '@reach/router'
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 
-const Login = () => {
+const Login = ({ setLoggedIn }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
-
+  
   const doLogin = (e) => {
     e.preventDefault()
     console.info("email", email)
@@ -21,31 +20,22 @@ const Login = () => {
       alert('Please enter your password!')
       return
     }
-
-    if(!passwordConfirmation) {
-      alert('Please enter your password two times')
-      return
-    }
-
+    
     if(password.length < 8) {
       alert('Password must have at least 8 chars')
       return
     }
 
-    if(password !== passwordConfirmation) {
-      alert('Please enter the same value in both the password fields')
-      return
-    }
-
     console.info("SUBMIT OK")
 
-    const url = 'http://localhost:3001/register'
+    const url = 'http://localhost:3001/login'
     const options = {
       method: 'post',
       headers: {
         'Content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
       },
-      body: `email=${email}&password=${password}&passwordConfirmation=${passwordConfirmation}`
+      body: `email=${xss(email)}&password=${xss(password)}`,
+      credentials: 'include'
     }
 
     fetch(url, options)
@@ -66,8 +56,10 @@ const Login = () => {
 
       if(data.success){
         console.log("success token", data.token)
-        document.cookie = 'token=' + data.token
-        navigate('/add-activity')
+        //document.cookie = 'token=' + data.token
+        document.cookie = 'signedin=true'
+        setLoggedIn(true)
+        //navigate('/add-activity')
       }
     })
   }
@@ -83,9 +75,6 @@ const Login = () => {
         </Row>
         <Row>
           <Input type="password" onChange={e => setPassword(e.target.value)}  placeholder="Enter your password"/>
-        </Row>
-        <Row>
-          <Input type="password" onChange={e => setPasswordConfirmation(e.target.value)}  placeholder="Confirm your password"/>
         </Row>
       </InputWrapper>     
       

@@ -60,8 +60,9 @@ const MapPicker = ({ location, setLocation }) => {
 		initMap(location, setLocation)
 
 		return () => {			
+			if(!mapInstance) return
 			mapInstance.off()
-			if(mapInstance) mapInstance.remove()
+			mapInstance.remove()
 		}
   }, [location, setLocation])
 

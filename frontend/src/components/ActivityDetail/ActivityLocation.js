@@ -52,7 +52,6 @@ const ActivityLocation = ({ location }) => {
 		return () => {
 			if(!mapInstance) return
 			mapInstance.off()
-			mapInstance.remove()
 		}
   }, [location])
 

@@ -2,6 +2,7 @@ import { navigate } from '@reach/router'
 
 import ActivityLocation from './ActivityLocation'
 import ActivityDate from './ActivityDate'
+import EmptyStateScreen from './EmptyStateScreen'
 
 import xss from 'xss'
 import { css } from '@emotion/react'
@@ -10,7 +11,7 @@ import styled from '@emotion/styled'
 const ActivityDetail = ({ activities, showActivities, currentActivity, setCurrentActivity, reloadActivities, deleteActivity, activityId }) => {		
 	if(!currentActivity) {		
 		if(activityId) setCurrentActivity(activities.filter(item => item.key === Number(activityId) ? true : false)[0])		
-		return '<></>'
+		return <EmptyStateScreen />
 	}
 
 	const deleteCurrent = () => {

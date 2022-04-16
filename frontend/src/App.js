@@ -5,13 +5,41 @@ import './App.css';
 import { openDB } from 'idb'
 //import { arrayIncludes } from '@material-ui/pickers/_helpers/utils';
 import { Router, Link } from "@reach/router"
+import Cookie from 'js-cookie'
+
+import { ApolloClient } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloProvider } from 'react-apollo'
+import { setContext } from 'apollo-link-context'
+import gql from 'graphql-tag' //install also graphql
 
 import Homepage from './components/Homepage.js'
 import AddActivity from './components/AddActivity/AddActivity.js'
 import Activities from './components/Activities.js'
+import Register from './components/Register'
 import Login from './components/Login'
 
 const storeName = 'activities'
+
+const httpLink = new HttpLink({
+  uri: 'http://localhost:3001/graphql',
+  credentials: 'include'
+})
+
+/*
+const authLink = setContext((_, { headers }) => {
+  //const token = Cookies.get('token')
+  return {
+    headers: { ...headers, authorization: `Bearer ${Cookie.get('token')}` }
+  }
+})*/
+
+const client = new ApolloClient({
+  //link: authLink.concat(httpLink),
+  link: httpLink,
+  cache: new InMemoryCache()
+})
 
 //const activities = []
 const initDB = async () => {
@@ -86,8 +114,8 @@ const deleteActivity = async (key) => {
 
 const App = () => {
   const [activities, setActivities] = useState([])
-  const [loggedIn, setLoggedIn] = useState(false)
-
+  const [loggedIn, setLoggedIn] = useState(!!Cookie.get('signedin'))
+  
   const reloadActivities = async () => {
     const act = await getActivities()  
     console.info("act", act)    
@@ -109,31 +137,34 @@ const App = () => {
         </div>
       </header>
       
-      <Router>
-        <Homepage path="/" />
-        <AddActivity path="add-first-activity" 
-          comingFromHomepage 
-          storeActivity={storeActivity} 
-          initActivities={initActivities} 
-          setActivities={setActivities} 
-          activities={activities} 
-          reloadActivities={reloadActivities}  
-        />
-        <AddActivity path="add-activity" 
-          storeActivity={storeActivity} 
-          initActivities={initActivities} 
-          setActivities={setActivities} 
-          activities={activities}  
-          reloadActivities={reloadActivities} 
-        />
-        <Login path="login" />
-        <Activities path="activities/*" 
-          activities={activities} 
-          reloadActivities={reloadActivities} 
-          deleteActivity={deleteActivity} 
-          loggedIn={loggedIn} 
-        />
-      </Router>
+      <ApolloProvider client={client}>
+        <Router>
+          <Homepage path="/" />
+          <AddActivity path="add-first-activity" 
+            comingFromHomepage 
+            storeActivity={storeActivity} 
+            initActivities={initActivities} 
+            setActivities={setActivities} 
+            activities={activities} 
+            reloadActivities={reloadActivities}  
+          />
+          <AddActivity path="add-activity" 
+            storeActivity={storeActivity} 
+            initActivities={initActivities} 
+            setActivities={setActivities} 
+            activities={activities}  
+            reloadActivities={reloadActivities} 
+          />
+          <Register path="register" loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+          <Login path="login" loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+          <Activities path="activities/*" 
+            activities={activities} 
+            reloadActivities={reloadActivities} 
+            deleteActivity={deleteActivity} 
+            loggedIn={loggedIn} 
+          />
+        </Router>
+      </ApolloProvider>
 
       <footer>
         <p>© 2021 HrbekJ</p>

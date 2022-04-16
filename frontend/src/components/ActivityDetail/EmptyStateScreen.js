@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 
-const EmptyStateScreen = ({  }) => {	
+const EmptyStateScreen = () => {	
   return (
 		<Wrapper>
       Select activity!
@@ -10,6 +10,7 @@ const EmptyStateScreen = ({  }) => {
 
 const Wrapper = styled.div`	
 	display: flex;
+  padding-top: 50px;
   align-items: center;
   justify-content: center;
 
