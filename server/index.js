@@ -15,6 +15,31 @@ const {
   gql,
   AuthenticationError
 } = require('apollo-server-express')
+//const { Pool } = require('pg')
+
+//https://www.pgadmin.org/
+//https://elephantsql.com/
+const { Client } = require('pg')
+const client = new Client({
+  user: 'vjbpkzzr',
+  host: 'tai.db.elephantsql.com',
+  database: 'vjbpkzzr',
+  password: 'RZhpUeBTXKyoiBN1lGuxl79z2F3BJL57',
+  port: 5432
+})
+/*
+const client = new Client({
+  user: 'lzynaoih',
+  host: 'rogue.db.elephantsql.com',
+  database: 'lzynaoih',
+  password: 'yJ0yjONZAbe-54n_obYgPre0KOtG5vAH',
+  port: 5432
+})*/
+
+const initDb = async () => {
+  await client.connect()
+}
+initDb()
 
 const users = [{  
   email: 'your@email.cz',
@@ -24,60 +49,86 @@ const users = [{
   email: 'gabro057@email.cz',
   password: '987654321'
 }]
-
+/*
 const activities = [
   {
-    title: "Programovani",
-    location: {
-      lat: 51.473599521024354,
-      lng: -0.03158569335937501
-    },
+    title: "Programovani",    
+    lat: 51.473599521024354,
+    lng: -0.03158569335937501,    
     description: "REACT nebo PREACT Co byste zvolili? 1234567890+ěščřžýáíé",
     datetime: "2021-03-01T15:55:58.422Z"
   },
   {
-    title: "Ahoj Alfons",
-    location: {
-      lat: 51.458092962783894,
-      lng: -0.14436721801757815
-    },
+    title: "Ahoj Alfons",    
+    lat: 51.458092962783894,
+    lng: -0.14436721801757815,    
     description: "Jak se mas?",
     datetime: "2021-03-01T15:55:58.422Z"
   },
   {
-    title: "Beh kolem Olesne",
-    location: {
-      lat: 51.84046568404054,
-      lng: -0.8681774139404297
-    },
+    title: "Beh kolem Olesne",    
+    lat: 51.84046568404054,
+    lng: -0.8681774139404297,    
     description: "Rano Martik bezel svuj prvni zavod",
     datetime: "2021-03-02T11:55:58.422Z"
   }
 ]
-
+*/
 //schema
 const typeDefs = gql`
-  type Location {
+  type Activity {
+    id: String!
+    title: String!
+    description: String!
+    datetime: String!
     lat: String!
     lng: String!
   }
 
-  type Activities {
-    title: String!
-    description: String!
-    datetime: String!
-    location: Location
+  type Query {
+    activities: [Activity]
   }
 
-  type Query {
-    activities: [Activities]
+  type Mutation {
+    addActivity(
+      title: String!
+      description: String!
+      datetime: String!
+      lat: String!
+      lng: String!
+    ) : Activity
   }
 `
 
 const resolvers = {
   Query: {
-    activities: (root, args) => {
-      return activities
+    activities: async (root, args, context) => {
+      console.log("context.email", context.email)
+      const text = 'SELECT * FROM activities WHERE email = $1'
+      const values = [context.email]
+
+      try {
+        const res = await client.query(text, values)
+        console.log("res.rows", res.rows)        
+        return res.rows
+      } catch(err) {
+        console.log(err.stack)
+      }      
+    }
+  },
+  Mutation: {
+    addActivity: async (root, args, context) => {
+      console.log(args.title, args.description, args.datetime, args.lat, args.lng)
+      //const res = await client.query()
+      const text = 'INSERT INTO activities (title, description, datetime, lat, lng, email) VALUES($1, $2, $3, $4, $5, $6) *'
+      const values = [args.title, args.description, args.datetime, args.lat, args.lng, context.email]
+
+      try {
+        const res = await client.query(text, values) 
+        return res.rows[0]
+      } catch(err) {
+        console.log(err.stack)
+      }
     }
   }
 }
@@ -92,6 +143,7 @@ const context = ({ req }) => {
     console.log(jwt.verify(token, SECRET_KEY))
     const { email } = jwt.verify(token, SECRET_KEY) //token.split(' ')[1]
     console.info("email", email)
+    return { email }
   } catch (err) {
     throw new AuthenticationError('Authentication error, JWT invalid')
   }

@@ -5,7 +5,7 @@ import '../../styles/leaflet.css';
 
 var mapInstance = null
 
-const initMap = (location, setLocation) => {
+const initMap = (lat, lng, setLat, setLng) => {
 	mapInstance = L.map('mapid')
 
 	window.navigator.geolocation.getCurrentPosition(position => {
@@ -14,7 +14,7 @@ const initMap = (location, setLocation) => {
 		let lat = position.coords.latitude
 		let lng = position.coords.longitude
 		
-		mapInstance = mapInstance.setView([location.lat || lat, location.lng || lng], 13);
+		mapInstance = mapInstance.setView([lat, lng], 13);
 		
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -30,7 +30,7 @@ const initMap = (location, setLocation) => {
 			//shadowAnchor: [22, 94]
 		})
 
-		L.marker([location.lat || lat, location.lng || lng], { icon: myIcon }).addTo(mapInstance)
+		L.marker([lat, lng], { icon: myIcon }).addTo(mapInstance)
 			
 			/*
 				L.marker([location.lat || lat, location.lng || lng], { icon: myIcon }).addTo(mapInstance)
@@ -41,7 +41,9 @@ const initMap = (location, setLocation) => {
 
 			mapInstance.on('click', e => {
 				//console.log(e.latlng)
-				setLocation({ lat: e.latlng.lat, lng: e.latlng.lng })
+				setLat(e.latlng.lat)
+				setLng(e.latlng.lng)
+
 				const popup = L.popup()
 				popup	
 					.setLatLng(e.latlng)
@@ -55,16 +57,16 @@ const initMap = (location, setLocation) => {
 	})	
 }
 
-const MapPicker = ({ location, setLocation }) => {
+const MapPicker = ({ lat, lng, setLat, setLng }) => {
 	useEffect(() => {    
-		initMap(location, setLocation)
+		initMap(lat, lng, setLat, setLng)
 
 		return () => {			
 			if(!mapInstance) return
 			mapInstance.off()
 			mapInstance.remove()
 		}
-  }, [location, setLocation])
+  }, [lat, lng, setLat, setLng])
 
   return (
 		<Map id="mapid" className="MapPicker"></Map>		

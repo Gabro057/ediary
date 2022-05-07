@@ -5,8 +5,8 @@ import '../../styles/leaflet.css';
 
 let mapInstance = null
 
-const initMap = location => {	
-	if(!location || !location.lat || !location.lng) {
+const initMap = (lat, lng) => {	
+	if(!lat || !lng) {
 		mapInstance = null
 		
 		return (
@@ -21,7 +21,7 @@ const initMap = location => {
 		dragging: false,
 		zoomControl: false,
 		scrollWheelZoom: false
-	}).setView([location.lat || 51.505, location.lng || -0.09], 13);
+	}).setView([lat || 51.505, lng || -0.09], 13);
 
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'		
@@ -37,25 +37,20 @@ const initMap = location => {
 		//shadowAnchor: [22, 94]
 	})
 
-	L.marker([location.lat, location.lng], { icon: myIcon }).addTo(mapInstance)
-
-	/*L.marker([location.lat, location.lng]).addTo(mapInstance)
-		.addTo(mapInstance)
-		.bindPopup('Lokace aktivity')
-		.openPopup();*/
+	L.marker([lat, lng], { icon: myIcon }).addTo(mapInstance)
 }
 
-const ActivityLocation = ({ location }) => {
+const ActivityLocation = ({ lat, lng }) => {
 	useEffect(() => {    
-		initMap(location)
+		initMap(lat, lng)
 
 		return () => {
 			if(!mapInstance) return
 			mapInstance.off()
 		}
-  }, [location])
+  }, [lat, lng])
 
-	if(location == null) return (<></>)
+	if(lat == null) return (<></>)
 	else {
 		return (				
 			<Map id="mapid" className="MapPicker"></Map>

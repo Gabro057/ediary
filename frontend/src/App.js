@@ -42,6 +42,7 @@ const client = new ApolloClient({
 })
 
 //const activities = []
+
 const initDB = async () => {
   const dbName = 'ediary.cz'  
   const version = 1
@@ -94,15 +95,7 @@ const getActivities = async () => {
   return activities
 }
 
-const storeActivity = async (activity) => {
-  console.log('storeActivity', activity);
-  const db = await initDB()
-  const tx = await db.transaction(storeName, 'readwrite')
-  const store = await tx.objectStore(storeName)
 
-  await store.put(activity)
-  await tx.done
-}
 
 const deleteActivity = async (key) => {  
   const db = await initDB()
@@ -115,7 +108,54 @@ const deleteActivity = async (key) => {
 const App = () => {
   const [activities, setActivities] = useState([])
   const [loggedIn, setLoggedIn] = useState(!!Cookie.get('signedin'))
+  const [rerender, setRerender] = useState(false)
   
+  const storeActivity = async (activity) => {
+    console.log('storeActivity', activity);
+    const ADD_ACTIVITY_MUTATION = gql`
+      mutation AddActivity(
+        $title: String!,
+        $description: String!,
+        $datetime: String!,
+        $lat: String!,
+        $lng: String!
+      ){
+        addActivity(
+          title: $title,
+          description: $description,
+          datetime: $datetime,
+          lat: $lat,
+          lng: $lng
+        ){
+          id
+          title
+          description
+          datetime
+          lat
+          lng
+        }
+      }
+    `
+    client.mutate({
+      mutation: ADD_ACTIVITY_MUTATION,
+      variables: {
+        title: activity.title,
+        description: activity.description,
+        datetime: activity.datetime,
+        lat: String(activity.lat),
+        lng: String(activity.lng)
+      }
+    }).then(data => console.log(data))
+  
+  /*
+    const db = await initDB()
+    const tx = await db.transaction(storeName, 'readwrite')
+    const store = await tx.objectStore(storeName)
+  
+    await store.put(activity)
+    await tx.done*/
+  }
+
   const reloadActivities = async () => {
     const act = await getActivities()  
     console.info("act", act)    
@@ -157,11 +197,13 @@ const App = () => {
           />
           <Register path="register" loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
           <Login path="login" loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-          <Activities path="activities/*" 
-            activities={activities} 
+          <Activities 
+            path="activities/*" 
+            activities={activities}
             reloadActivities={reloadActivities} 
             deleteActivity={deleteActivity} 
             loggedIn={loggedIn} 
+            rerender={rerender}
           />
         </Router>
       </ApolloProvider>

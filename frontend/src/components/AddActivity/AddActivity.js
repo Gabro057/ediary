@@ -11,7 +11,8 @@ import xss from 'xss'
 
 const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) => {
   const [title, setTitle] = useState('')
-  const [location, setLocation] = useState({})
+  const [lat, setLat] = useState('')
+  const [lng, setLng] = useState('')
   const [datetime, setDatetime] = useState(new Date())
   const [description, setDescription] = useState('')
 
@@ -26,7 +27,7 @@ const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) =>
     const sanitizedTitle = xss(title)
     console.info("sanitizedDescription", sanitizedDescription)  
 
-    await storeActivity({ title: sanitizedTitle, location, description: sanitizedDescription, datetime })    
+    await storeActivity({ title: sanitizedTitle, lat, lng, description: sanitizedDescription, datetime })    
     reloadActivities()
     navigate('/activities')
   }
@@ -51,7 +52,7 @@ const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) =>
           <DatePicker datetime={datetime} setDatetime={setDatetime} />
         </InputBlock>
 
-        <MapPicker location={location} setLocation={setLocation} />
+        <MapPicker lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
       </TopBlock>
       <DescriptionBlock>
         <ReactQuill value={description} onChange={changeDescription} />       

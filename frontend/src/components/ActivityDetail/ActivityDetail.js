@@ -30,7 +30,7 @@ const ActivityDetail = ({ activities, showActivities, currentActivity, setCurren
 				<ActivityDate datetime={currentActivity.datetime} />
 			</Top>
 
-			<ActivityLocation location={currentActivity.location} />		
+			<ActivityLocation lat={currentActivity.lat} lng={currentActivity.lng} />		
 			<Description dangerouslySetInnerHTML={{ __html: xss(currentActivity.description) }}></Description>
 			<BtnWrapper>        
         <button onClick={deleteCurrent}>Delete activity</button>

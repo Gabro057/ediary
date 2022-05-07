@@ -19,7 +19,10 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 			<Query query={
 				gql`{ 
 					activities { 
+						id
 						title 
+						lat
+						lng
 						description
 						datetime
 					}}`
@@ -32,7 +35,29 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 						return <p></p>
 					}
 					if(!data || !data.activities) return ''
-					return <ul>{data.activities.map(item => <li key={item.title}>{item.title}</li>)}</ul>
+					return <ul>{data.activities.map((activity, index) => 							
+									{
+										activity.datetime = new Date(activity.datetime)
+										return (
+										<Item key={index} onClick={() => {
+												navigate('/activities/' + activity.id || activity.key)
+												setCurrentActivity(activity)
+												setShowActivities(false)
+										}}>								
+											<div>
+												<Day>
+													{ activity.datetime && activity.datetime.getDate() }	
+												</Day>
+												<Month>
+													{ activity.datetime && monthNames[activity.datetime.getMonth()] }
+												</Month>								
+											</div>
+											<Title>
+												{activity.title}
+											</Title>
+										</Item>
+									)}
+						)}</ul>
 				}}
 			</Query>
 				
