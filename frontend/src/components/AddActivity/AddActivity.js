@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { navigate } from '@reach/router'
 import { css } from '@emotion/react'
@@ -5,16 +6,41 @@ import styled from '@emotion/styled'
 
 import MapPicker from './MapPicker'
 import DatePicker from './DatePicker'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+
+import { useQuill } from 'react-quilljs';
+import 'quill/dist/quill.snow.css'; // Add css for snow theme
+//import ReactQuill from 'react-quill'
+//import 'react-quill/dist/quill.snow.css'
 import xss from 'xss'
 
-const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) => {
+const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities, loggedIn }) => {
   const [title, setTitle] = useState('')
   const [lat, setLat] = useState('')
   const [lng, setLng] = useState('')
   const [datetime, setDatetime] = useState(new Date())
   const [description, setDescription] = useState('')
+  const { quill, quillRef } = useQuill(); //https://www.npmjs.com/package/react-quill
+  
+  console.log(quill);    // undefined > Quill Object
+  console.log(quillRef); // { current: undefined } > { current: Quill Editor Refer
+
+  if(!comingFromHomepage && !loggedIn) {
+    navigate('/')
+    return (<div></div>)
+  }
+
+  React.useEffect(() => {
+    if (quill) {
+      quill.clipboard.dangerouslyPasteHTML(description);
+      quill.on('text-change', (delta, oldDelta, source) => {
+        //console.log(quill.getText()); // Get text only
+        //console.log(quill.getContents()); // Get delta contents
+        console.log(quill.root.innerHTML); // Get innerHTML using quill
+       // console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
+        setDescription(quill.root.innerHTML)
+      });
+    }
+  }, [quill]);
 
   const addActivity = async () => { 
     if(!title){
@@ -27,9 +53,9 @@ const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) =>
     const sanitizedTitle = xss(title)
     console.info("sanitizedDescription", sanitizedDescription)  
 
-    await storeActivity({ title: sanitizedTitle, lat, lng, description: sanitizedDescription, datetime })    
+    await storeActivity({ id: Math.floor(Math.random() * 100000), title: sanitizedTitle, lat, lng, description: sanitizedDescription, datetime })    
     reloadActivities()
-    navigate('/activities')
+    //navigate('/activities')
   }
 
   const changeDescription = value => { 
@@ -54,19 +80,16 @@ const AddActivity = ({ comingFromHomepage, storeActivity, reloadActivities }) =>
 
         <MapPicker lat={lat} lng={lng} setLat={setLat} setLng={setLng} />
       </TopBlock>
-      <DescriptionBlock>
-        <ReactQuill value={description} onChange={changeDescription} />       
+      <DescriptionBlock>        
+        <div ref={quillRef} /> 
       </DescriptionBlock>
       
     </Section>
   )
+
+  //<ReactQuill value={description} onChange={changeDescription} />    
+  //<div ref={quillRef} />    
 }
-//onchange={value => changeDescription(value)}  
-/*
-  <SaveWrapper>
-    <button onClick={addActivity}>Save</button>
-  </SaveWrapper>
-*/
 
 const borderStyle = () =>
 css`	

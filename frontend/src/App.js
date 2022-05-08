@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import logo from './img/logo_w.png';
 import './App.css';
@@ -19,6 +20,8 @@ import AddActivity from './components/AddActivity/AddActivity.js'
 import Activities from './components/Activities.js'
 import Register from './components/Register'
 import Login from './components/Login'
+
+import { navigate } from '@reach/router'
 
 const storeName = 'activities'
 
@@ -95,8 +98,6 @@ const getActivities = async () => {
   return activities
 }
 
-
-
 const deleteActivity = async (key) => {  
   const db = await initDB()
   const tx = await db.transaction(storeName, 'readwrite')
@@ -108,12 +109,13 @@ const deleteActivity = async (key) => {
 const App = () => {
   const [activities, setActivities] = useState([])
   const [loggedIn, setLoggedIn] = useState(!!Cookie.get('signedin'))
-  const [rerender, setRerender] = useState(false)
-  
+    
   const storeActivity = async (activity) => {
     console.log('storeActivity', activity);
+    
     const ADD_ACTIVITY_MUTATION = gql`
-      mutation AddActivity(
+      mutation addActivity(  
+        $id: Int!,      
         $title: String!,
         $description: String!,
         $datetime: String!,
@@ -121,13 +123,14 @@ const App = () => {
         $lng: String!
       ){
         addActivity(
+          id: $id,
           title: $title,
           description: $description,
           datetime: $datetime,
           lat: $lat,
           lng: $lng
-        ){
-          id
+        ){   
+          id       
           title
           description
           datetime
@@ -139,13 +142,17 @@ const App = () => {
     client.mutate({
       mutation: ADD_ACTIVITY_MUTATION,
       variables: {
+        id: activity.id,
         title: activity.title,
         description: activity.description,
         datetime: activity.datetime,
         lat: String(activity.lat),
         lng: String(activity.lng)
       }
-    }).then(data => console.log(data))
+    }).then(data => {
+      console.log(data)
+      navigate('/activities')
+    })
   
   /*
     const db = await initDB()
@@ -193,6 +200,7 @@ const App = () => {
             initActivities={initActivities} 
             setActivities={setActivities} 
             activities={activities}  
+            loggedIn={loggedIn}
             reloadActivities={reloadActivities} 
           />
           <Register path="register" loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
@@ -202,8 +210,7 @@ const App = () => {
             activities={activities}
             reloadActivities={reloadActivities} 
             deleteActivity={deleteActivity} 
-            loggedIn={loggedIn} 
-            rerender={rerender}
+            loggedIn={loggedIn}             
           />
         </Router>
       </ApolloProvider>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { css } from '@emotion/react'
 import { navigate } from '@reach/router'
 import { gql } from 'apollo-boost'
@@ -5,7 +6,7 @@ import { Query } from 'react-apollo'
 
 import styled from '@emotion/styled'
 
-const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurrentActivity, loggedIn }) => {
+const ActivitiesList = ({ showActivities, setShowActivities, setCurrentActivity, loggedIn }) => {
 	const monthNames = [
 		'JAN', 'FEB', 'MAR',
 		'APR', 'MAY', 'JUN',
@@ -16,7 +17,8 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 	/*query={gql`{todos { id name }}`}*/
 	return (
 		<Menu showActivities={showActivities}>
-			<Query query={
+			<Query fetchPolicy='no-cache'
+			query={
 				gql`{ 
 					activities { 
 						id
@@ -27,7 +29,7 @@ const ActivitiesList = ({ activities, showActivities, setShowActivities, setCurr
 						datetime
 					}}`
 				}> 
-				{({ loading, error, data }) => {
+				{({ loading, error, data, refetch }) => {
 					if(loading) return <p>Loading ...</p>
 					if(error) {
 						console.error("error", error)

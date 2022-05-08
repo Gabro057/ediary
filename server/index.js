@@ -40,7 +40,7 @@ const initDb = async () => {
   await client.connect()
 }
 initDb()
-
+/*
 const users = [{  
   email: 'your@email.cz',
   password: '123456'
@@ -48,7 +48,7 @@ const users = [{
 {  
   email: 'gabro057@email.cz',
   password: '987654321'
-}]
+}]*/
 /*
 const activities = [
   {
@@ -75,9 +75,10 @@ const activities = [
 ]
 */
 //schema
-const typeDefs = gql`
+//id: String!
+const typeDefs = gql`  
   type Activity {
-    id: String!
+    id: Int!
     title: String!
     description: String!
     datetime: String!
@@ -91,6 +92,7 @@ const typeDefs = gql`
 
   type Mutation {
     addActivity(
+      id: Int!
       title: String!
       description: String!
       datetime: String!
@@ -118,9 +120,9 @@ const resolvers = {
   },
   Mutation: {
     addActivity: async (root, args, context) => {
-      console.log(args.title, args.description, args.datetime, args.lat, args.lng)
+      console.log("addActivity=", args,id, args.title, args.description, args.datetime, args.lat, args.lng)
       //const res = await client.query()
-      const text = 'INSERT INTO activities (title, description, datetime, lat, lng, email) VALUES($1, $2, $3, $4, $5, $6) *'
+      const text = 'INSERT INTO activities (title, description, datetime, lat, lng, email) VALUES($1, $2, $3, $4, $5, $6) RETURNING *'
       const values = [args.title, args.description, args.datetime, args.lat, args.lng, context.email]
 
       try {
@@ -177,7 +179,7 @@ async function startApolloServer(typeDefs, resolvers, context) {
   }
 
   app.post('/register', async (req, res) => {
-    console.info("SERVER POST body", req.body)
+    console.info("REGISTER SERVER POST body", req.body)
     const { email, password, passwordConfirmation } = req.body
     console.info("email", email)
     console.info("password", password)
@@ -216,11 +218,21 @@ async function startApolloServer(typeDefs, resolvers, context) {
     }
 
     const hash = await bcrypt.hash(password, 10) //10 rounds
+    const text = 'INSERT INTO users (email, password) VALUES($1, $2)'
+    const values = [email, hash]
 
+    try {
+      const response = await client.query(text, values) 
+      console.info("USERS INSERT response", response.rows[0])
+      //return response.rows[0]
+    } catch(err) {
+      console.log(err.stack)
+    }
+/*
     users.push({
       email: xss(email),
       password: xss(hash)
-    })
+    })*/
     
     res.cookie('token', getToken(email), {
       httpOnly: true
@@ -233,38 +245,49 @@ async function startApolloServer(typeDefs, resolvers, context) {
     })
   })
 
-  app.post('/login', (req, res) => {
+  app.post('/login', async (req, res) => {
     const { email, password } = req.body
 
-    const theUser = users.find(user => user.email === email)
+    //const theUser = users.find(user => user.email === email)
+    const text = 'SELECT * FROM users WHERE email = $1'
+    const values = [email]
 
-    if(!theUser) {
-      res.status(404).send({
-        success: false,
-        message: 'Could not find account: ${email}'
+    try {
+      const response = await client.query(text, values)
+      const theUser = response.rows[0]
+      console.info("user", theUser)
+      //return res.rows
+
+      if(!theUser) {
+        res.status(404).send({
+          success: false,
+          message: 'Could not find account: ${email}'
+        })
+        return
+      }
+  
+      const match = bcrypt.compare(password, theUser.password)
+  
+      if(!match) {
+        res.status(401).send({
+          success: false,
+          message: 'Incorrect credentials'
+        })
+        return
+      }
+      
+      res.cookie('token', getToken(email), {
+        httpOnly: true
+        //secure: true
       })
-      return
-    }
-
-    const match = bcrypt.compare(password, theUser.password)
-
-    if(!match) {
-      res.status(401).send({
-        success: false,
-        message: 'Incorrect credentials'
+  
+      res.send({
+        success: true
+        //token: getToken(theUser.email)
       })
-      return
+    } catch(err) {
+      console.log(err.stack)
     }
-    
-    res.cookie('token', getToken(email), {
-      httpOnly: true
-      //secure: true
-    })
-
-    res.send({
-      success: true
-      //token: getToken(theUser.email)
-    })
   })
 
   app.listen(3001, () => console.log('Server listening on port 3001'))

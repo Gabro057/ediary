@@ -1,3 +1,4 @@
+import React from 'react';
 import { navigate } from '@reach/router'
 
 import ActivityLocation from './ActivityLocation'

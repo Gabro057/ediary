@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import xss from 'xss'
 import { navigate } from '@reach/router'
@@ -59,7 +60,7 @@ const Login = ({ setLoggedIn }) => {
         //document.cookie = 'token=' + data.token
         document.cookie = 'signedin=true'
         setLoggedIn(true)
-        //navigate('/add-activity')
+        navigate('/add-activity')
       }
     })
   }
