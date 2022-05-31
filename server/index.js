@@ -158,7 +158,7 @@ async function startApolloServer(typeDefs, resolvers, context) {
   const app = express()  
   
   const corsOptions = {    
-    origin: ['http://localhost:3000', 'http://aub.cz'],
+    origin: ['https://ediary-test.herokuapp.com/', 'http://aub.cz'],
     credentials: true
   }
   //credentials: true,
@@ -290,9 +290,16 @@ async function startApolloServer(typeDefs, resolvers, context) {
     }
   })
 
-  app.listen(3001, () => console.log('Server listening on port 3001'))
+  app.get('/', (req, res) => {
+    res.status(200).send({
+      success: true,
+      message: `Hello, World!`
+    })
+  })
+
+  app.listen(process.env.PORT || 3001, () => console.log('Server listening on port 3001'))
   //await new Promise(resolve => app.listen({ port: 3001 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:3001${server.graphqlPath}`);
+  console.log(`🚀 Server ready on PORT ${process.env.PORT} or 3001`);
 }
 
 startApolloServer(typeDefs, resolvers, context)

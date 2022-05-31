@@ -42,7 +42,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
 
     console.info("SUBMIT OK")
 
-    const url = 'http://localhost:3001/register'
+    const url = 'https://ediary-test.herokuapp.com/register'
     const options = {
       method: 'post',
       headers: {

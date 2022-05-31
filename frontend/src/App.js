@@ -26,7 +26,7 @@ import { navigate } from '@reach/router'
 const storeName = 'activities'
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: 'https://ediary-test.herokuapp.com/graphql',
   credentials: 'include'
 })
 

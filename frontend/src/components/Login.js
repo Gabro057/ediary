@@ -29,7 +29,7 @@ const Login = ({ setLoggedIn }) => {
 
     console.info("SUBMIT OK")
 
-    const url = 'http://localhost:3001/login'
+    const url = 'https://ediary-test.herokuapp.com/login'
     const options = {
       method: 'post',
       headers: {
