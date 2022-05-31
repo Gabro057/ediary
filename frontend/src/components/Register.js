@@ -95,6 +95,10 @@ const Register = ({ loggedIn, setLoggedIn }) => {
       <Row>
         <button type="submit">Register</button>
       </Row>
+      <Row>
+        <br />
+        <p>Alredy have an account? <a href="/login">Log in</a></p>
+      </Row>
     </Section>
   )
 }

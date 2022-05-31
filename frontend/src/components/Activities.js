@@ -13,11 +13,11 @@ import MobileMenu from './Activities/SidebarMobile.js'
 const Activities = ({ activities, deleteActivity, reloadActivities, loggedIn, rerender }) => {	
 	const [showActivities, setShowActivities] = useState(false)
 	const [currentActivity, setCurrentActivity] = useState(null)
-/*
+
 	if(!loggedIn) {
-    navigate('/')
-    return (<div></div>)
-  }*/
+    navigate('/login')
+   // return (<div></div>)
+  }
 
 	return (		
 		<Section className="activities" showActivities={showActivities}>

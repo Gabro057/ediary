@@ -158,7 +158,7 @@ async function startApolloServer(typeDefs, resolvers, context) {
   const app = express()  
   
   const corsOptions = {    
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://aub.cz'],
     credentials: true
   }
   //credentials: true,

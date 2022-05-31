@@ -3,8 +3,12 @@ import { navigate } from '@reach/router'
 import screenshot from "../img/screenshot.png";
 
 const Homepage = () => {
-  const runActivity = () => {
+  const addActivity = () => {
     navigate("/add-first-activity")
+  }
+
+  const showRegistration = () => {
+    navigate("/register")
   }
   
   return (
@@ -17,7 +21,7 @@ const Homepage = () => {
           <p>
             Log your daily activities in this fun to use app!
           </p>
-          <button onClick={runActivity}>Start</button>
+          <button onClick={addActivity}>Start</button>
         </div>
       </div>
     </section>

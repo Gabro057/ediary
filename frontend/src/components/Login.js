@@ -82,6 +82,10 @@ const Login = ({ setLoggedIn }) => {
       <Row>
         <button type="submit">Login</button>
       </Row>
+      <Row>
+        <br />
+        <p>Don't have an account? <a href="/register">Register</a></p>
+      </Row>
     </Section>
   )
 }
